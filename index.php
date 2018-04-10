@@ -15,38 +15,48 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
   $nombreErreur = 0; // Variable qui compte le nombre d'erreur
   
   // Définit toutes les erreurs possibles
+  if (!isset($_POST['nom'])) {
+    $nombreErreur++;
+    $erreur1 = '<p>Il y a un problème avec la variable "nom".</p>';
+  } else {
+    if (empty($_POST['nom'])) {
+      $nombreErreur++;
+      $erreur2 = '<p>Vous avez oublié de donner un nom.</p>';
+    }
+  }
+
   if (!isset($_POST['email'])) { // Si la variable "email" du formulaire n'existe pas (il y a un problème)
     $nombreErreur++; // On incrémente la variable qui compte les erreurs
-    $erreur1 = '<p>Il y a un problème avec la variable "email".</p>';
+    $erreur3 = '<p>Il y a un problème avec la variable "email".</p>';
   } else { // Sinon, cela signifie que la variable existe (c'est normal)
     if (empty($_POST['email'])) { // Si la variable est vide
       $nombreErreur++; // On incrémente la variable qui compte les erreurs
-      $erreur2 = '<p>Vous avez oublié de donner votre email.</p>';
+      $erreur4 = '<p>Vous avez oublié de donner votre email.</p>';
     } else {
       if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $nombreErreur++; // On incrémente la variable qui compte les erreurs
-        $erreur3 = '<p>Cet email ne ressemble pas un email.</p>';
+        $erreur5 = '<p>Cet email ne ressemble pas un email.</p>';
       }
     }
   }
   
+  if (!isset($_POST['objet'])) {
+    $nombreErreur++;
+    $erreur6 = '<p>Il y a un problème avec la variable "objet".</p>';
+  } else {
+    if (empty($_POST['objet'])) {
+      $nombreErreur++;
+      $erreur7 = '<p>Vous avez oublié de donner un objet.</p>';
+    }
+  }
+
   if (!isset($_POST['message'])) {
     $nombreErreur++;
-    $erreur4 = '<p>Il y a un problème avec la variable "message".</p>';
+    $erreur8 = '<p>Il y a un problème avec la variable "message".</p>';
   } else {
     if (empty($_POST['message'])) {
       $nombreErreur++;
-      $erreur5 = '<p>Vous avez oublié de donner un message.</p>';
-    }
-  }
-  
-  if (!isset($_POST['captcha'])) {
-    $nombreErreur++;
-    $erreur6 = '<p>Il y a un problème avec la variable "captcha".</p>';
-  } else {
-    if ($_POST['captcha']!=4) {
-      $nombreErreur++;
-      $erreur7 = '<p>Désolé, le captcha anti-spam est erroné.</p>';
+      $erreur9 = '<p>Vous avez oublié de donner un message.</p>';
     }
   }
   
@@ -54,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     // Récupération des variables et sécurisation des données
     $nom = htmlentities($_POST['nom']); // htmlentities() convertit des caractères "spéciaux" en équivalent HTML
     $email = htmlentities($_POST['email']);
+    $objet = htmlentities($_POST['objet']);
     $message = htmlentities($_POST['message']);
     
     // Variables concernant l'email
@@ -63,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     $contenu .= '<p>Bonjour, vous avez reçu un message à partir de votre site web.</p>';
     $contenu .= '<p><strong>Nom</strong>: '.$nom.'</p>';
     $contenu .= '<p><strong>Email</strong>: '.$email.'</p>';
+    $contenu .= '<p><strong>Objet</strong>: '.$objet.'</p>';
     $contenu .= '<p><strong>Message</strong>: '.$message.'</p>';
     $contenu .= '</body></html>'; // Contenu du message de l'email
     
@@ -82,18 +94,19 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     if (isset($erreur4)) echo '<p>'.$erreur4.'</p>';
     if (isset($erreur5)) echo '<p>'.$erreur5.'</p>';
 	if (isset($erreur6)) echo '<p>'.$erreur6.'</p>';
-	if (isset($erreur7)) echo '<p>'.$erreur7.'</p>';
+    if (isset($erreur7)) echo '<p>'.$erreur7.'</p>';
+    if (isset($erreur7)) echo '<p>'.$erreur8.'</p>';
+    if (isset($erreur7)) echo '<p>'.$erreur9.'</p>';
     echo '</div>';
   }
 }
 ?>
 
   <form id="form" method="post" action="<?php echo strip_tags($_SERVER['REQUEST_URI']); ?>">
-    <p><input id="nom" type="text" name="nom" placeholder="NOM"></p>
-    <p><input id="prenom" type="text" name="prenom" placeholder="PRENOM"></p>
+    <p><input id="nom" type="text" name="nom" placeholder="NOM / PRENOM"></p>
     <p><input id="email" type="email" name="email" placeholder="E-MAIL"></p>
+    <p><input id="objet" type="text" name="objet" placeholder="OBJET"></p>
     <textarea id="message" name="message" placeholder="MESSAGE"></textarea><br>
-    <p><input id="captcha" type="text" name="captcha" placeholder="(ANTI-SPAM) 1+3 = ?"></p>
     <p><input id="submit" type="submit" name="submit" value="ENVOYER !"></p>
   </form>
 

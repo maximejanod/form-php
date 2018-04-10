@@ -131,12 +131,6 @@ input:hover
     color: #e2dedb;
 }
 
-#captcha {
-    height: 50px;
-    margin-top: -5px;
-    border: solid 1px #b3aca7;
-}
-
 textarea 
 {
     width: 470px;
@@ -181,7 +175,6 @@ textarea:hover
     cursor: pointer;
   
     border: solid 1px #b3aca7;
-    border-top: none;
 }
 
 #submit:hover 
